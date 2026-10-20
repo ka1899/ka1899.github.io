@@ -132,6 +132,8 @@ td.id { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
 /* footer */
 footer { border-top: 1px solid var(--line); padding-block: 56px 48px; display: grid; gap: 22px; justify-items: start; }
 footer h2 { font-size: clamp(34px, 6vw, 60px); font-weight: 800; margin: 0; }
+footer .mail { margin: 0; font-size: 18px; }
+footer .mail a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
 footer .small { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
 
 @keyframes blink { 50% { opacity: 0; } }
@@ -193,7 +195,8 @@ footer .small { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
   <span class="k">community</span>: <span class="s">"Social Chair, DSI Student Council"</span>,
   <span class="k">lookingFor</span>: <span class="s">"full-time analytics, AI,
                 consulting and FDE roles"</span>,
-  <span class="k">offDuty</span>: [<span class="s">"baking"</span>, <span class="s">"event planning"</span>, <span class="s">"Bridgerton"</span>]
+  <span class="k">offDuty</span>: [<span class="s">"cricket"</span>, <span class="s">"baking"</span>, <span class="s">"event planning"</span>,
+            <span class="s">"Bridgerton"</span>]
 };</pre>
       <div class="facts">
         <div class="fact"><span class="big">~4 yrs</span><p>of professional experience across Deloitte and Hapsun Medical Solutions.</p></div>
@@ -296,7 +299,7 @@ footer .small { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
           <tr><td class="id">R-01</td><td>Messy data</td><td><span class="lk" style="--w:90%">Certain</span></td><td>Clean it, document it, never trust it blindly.</td></tr>
           <tr><td class="id">R-02</td><td>Black-box models</td><td><span class="lk" style="--w:65%">High</span></td><td>Explain every prediction before it ships.</td></tr>
           <tr><td class="id">R-03</td><td>Scope creep</td><td><span class="lk" style="--w:40%">Medium</span></td><td>Write the problem statement first.</td></tr>
-          <tr><td class="id">R-04</td><td>Too many tabs open</td><td><span class="lk" style="--w:90%">Certain</span></td><td>Tea, and one task at a time.</td></tr>
+          <tr><td class="id">R-04</td><td>Too many tabs open</td><td><span class="lk" style="--w:90%">Certain</span></td><td>Close them. One task at a time.</td></tr>
         </tbody>
       </table>
     </div>
@@ -315,10 +318,12 @@ footer .small { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
 
   <footer>
     <span class="label">Say hello</span>
-    <h2>Let's talk risk, models and tea.</h2>
+    <h2>Let's talk risk, models and cricket.</h2>
+    <p class="mail">Email me at <a href="mailto:ka3090@columbia.edu">ka3090@columbia.edu</a></p>
     <div class="cta">
-      <a class="btn primary" href="https://www.linkedin.com/in/khushi-advani">LinkedIn</a>
-      <a class="btn ghost" href="https://ka1899.github.io/">Previous portfolio</a>
+      <a class="btn primary" href="resume.pdf" target="_blank" rel="noopener">Resume (PDF)</a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/khushi-advani" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn ghost" href="https://github.com/ka1899" target="_blank" rel="noopener">GitHub</a>
     </div>
     <span class="small">Khushi Advani &middot; New York &middot; 2026</span>
   </footer>
