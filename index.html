@@ -1,1015 +1,361 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Khushi Advani — Data Scientist & Analyst</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --bg: #060f0f;
-      --bg2: #0b1a1a;
-      --bg3: #0f2020;
-      --gold: #2dd4bf;
-      --gold-light: #7af0e2;
-      --gold-dim: rgba(45,212,191,0.12);
-      --text: #d8f0ee;
-      --text-muted: #6a9e99;
-      --text-dim: #2e5552;
-      --border: rgba(45,212,191,0.18);
-      --radius: 3px;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Outfit', sans-serif;
-      font-weight: 300;
-      line-height: 1.7;
-      overflow-x: hidden;
-    }
-
-    /* ─── NOISE OVERLAY ─── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-      opacity: 0.025;
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    /* ─── SCROLL PROGRESS ─── */
-    #progress {
-      position: fixed;
-      top: 0; left: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--gold), var(--gold-light));
-      width: 0%;
-      z-index: 1000;
-      transition: width 0.1s linear;
-    }
-
-    /* ─── NAV ─── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.5rem 4rem;
-      background: rgba(8,8,15,0.7);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(201,168,76,0.06);
-    }
-
-    .nav-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem;
-      letter-spacing: 0.08em;
-      color: var(--gold-light);
-      font-style: italic;
-      font-weight: 300;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 2.5rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.25s;
-    }
-
-    .nav-links a:hover { color: var(--gold-light); }
-
-    /* ─── HERO ─── */
-    #hero {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      padding: 8rem 4rem 4rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* decorative grid lines */
-    #hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
-      opacity: 0.35;
-    }
-
-    .hero-text { position: relative; z-index: 1; }
-
-    .hero-eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.2s forwards;
-    }
-
-    .hero-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3.5rem, 6vw, 6rem);
-      font-weight: 300;
-      line-height: 1.05;
-      letter-spacing: -0.01em;
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.4s forwards;
-    }
-
-    .hero-name em {
-      font-style: italic;
-      color: var(--gold-light);
-    }
-
-    .hero-tagline {
-      font-size: 1rem;
-      color: var(--text-muted);
-      max-width: 420px;
-      line-height: 1.8;
-      margin-bottom: 2.5rem;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.6s forwards;
-    }
-
-    .hero-ctas {
-      display: flex;
-      gap: 1rem;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.8s forwards;
-    }
-
-    .btn-primary {
-      padding: 0.75rem 2rem;
-      background: var(--gold);
-      color: var(--bg);
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border-radius: var(--radius);
-      transition: background 0.2s, transform 0.2s;
-      font-weight: 500;
-    }
-
-    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
-
-    .btn-ghost {
-      padding: 0.75rem 2rem;
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border-radius: var(--radius);
-      transition: border-color 0.2s, color 0.2s, transform 0.2s;
-    }
-
-    .btn-ghost:hover { border-color: var(--gold); color: var(--gold-light); transform: translateY(-2px); }
-
-    /* hero right — floating stat cards */
-    .hero-stats {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      padding-left: 4rem;
-      opacity: 0;
-      animation: fadeIn 1s 1s forwards;
-    }
-
-    .stat-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--gold), transparent);
-    }
-
-    .stat-card:nth-child(2) { margin-top: 2rem; }
-    .stat-card:nth-child(4) { margin-top: -2rem; }
-
-    .stat-num {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.2rem;
-      font-weight: 600;
-      color: var(--gold-light);
-      line-height: 1;
-      margin-bottom: 0.4rem;
-    }
-
-    .stat-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    /* ─── SECTIONS ─── */
-    section {
-      padding: 6rem 4rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      margin-bottom: 3.5rem;
-    }
-
-    .section-num {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--gold);
-      letter-spacing: 0.1em;
-    }
-
-    .section-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2rem, 3vw, 2.8rem);
-      font-weight: 300;
-      letter-spacing: 0.02em;
-    }
-
-    .section-line {
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    /* ─── ABOUT ─── */
-    #about {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 5rem;
-      align-items: start;
-    }
-
-    .about-content { }
-
-    .about-content .section-header { margin-bottom: 2rem; }
-
-    .about-body {
-      font-size: 1.05rem;
-      color: var(--text-muted);
-      line-height: 1.9;
-      max-width: 600px;
-    }
-
-    .about-body strong { color: var(--text); font-weight: 500; }
-
-    .about-details {
-      margin-top: 2.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .detail-row {
-      display: flex;
-      gap: 1rem;
-      align-items: baseline;
-    }
-
-    .detail-key {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gold);
-      min-width: 80px;
-    }
-
-    .detail-val {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .about-sidebar { padding-top: 5rem; }
-
-    .edu-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1.75rem;
-      margin-bottom: 1rem;
-      position: relative;
-    }
-
-    .edu-card::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, var(--gold), transparent);
-    }
-
-    .edu-school {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.15rem;
-      font-weight: 400;
-      margin-bottom: 0.3rem;
-    }
-
-    .edu-degree {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 0.5rem;
-    }
-
-    .edu-gpa {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--gold);
-      letter-spacing: 0.1em;
-    }
-
-    /* ─── EXPERIENCE ─── */
-    #experience { max-width: 1200px; margin: 0 auto; padding: 6rem 4rem; }
-
-    .timeline {
-      position: relative;
-      padding-left: 2rem;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 1px;
-      background: linear-gradient(180deg, var(--gold) 0%, var(--border) 60%, transparent 100%);
-    }
-
-    .timeline-item {
-      position: relative;
-      padding: 0 0 3.5rem 2.5rem;
-    }
-
-    .timeline-dot {
-      position: absolute;
-      left: -5px;
-      top: 8px;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      border: 2px solid var(--gold);
-      background: var(--bg);
-    }
-
-    .timeline-period {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.5rem;
-    }
-
-    .timeline-role {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.5rem;
-      font-weight: 400;
-      margin-bottom: 0.2rem;
-    }
-
-    .timeline-company {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
-    }
-
-    .timeline-bullets {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .timeline-bullets li {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      padding-left: 1.2rem;
-      position: relative;
-      line-height: 1.6;
-    }
-
-    .timeline-bullets li::before {
-      content: '→';
-      position: absolute;
-      left: 0;
-      color: var(--gold);
-      font-size: 0.7rem;
-      top: 0.15rem;
-    }
-
-    /* ─── PROJECTS ─── */
-    #projects { max-width: 1200px; margin: 0 auto; padding: 6rem 4rem; }
-
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-
-    .project-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 2rem;
-      transition: border-color 0.25s, transform 0.25s;
-      cursor: default;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .project-card:hover {
-      border-color: var(--gold);
-      transform: translateY(-4px);
-    }
-
-    .project-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top right, var(--gold-dim), transparent 60%);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .project-card:hover::before { opacity: 1; }
-
-    .project-tag {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1rem;
-    }
-
-    .project-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.35rem;
-      font-weight: 400;
-      margin-bottom: 0.75rem;
-      line-height: 1.3;
-    }
-
-    .project-desc {
-      font-size: 0.83rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-      margin-bottom: 1.25rem;
-    }
-
-    .project-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-
-    .chip {
-      padding: 0.2rem 0.65rem;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.58rem;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-    }
-
-    /* featured project */
-    .project-card.featured {
-      grid-column: span 2;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      align-items: start;
-    }
-
-    .featured-metric {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .metric-num {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2rem;
-      color: var(--gold-light);
-      font-weight: 300;
-    }
-
-    .metric-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    /* ─── SKILLS ─── */
-    #skills { max-width: 1200px; margin: 0 auto; padding: 6rem 4rem; }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
-    }
-
-    .skill-group {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1.75rem;
-    }
-
-    .skill-group-title {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.25rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .skill-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .skill-list li {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    /* ─── CONTACT ─── */
-    #contact {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 6rem 4rem 8rem;
-      text-align: center;
-    }
-
-    .contact-inner {
-      max-width: 560px;
-      margin: 0 auto;
-    }
-
-    .contact-headline {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 4vw, 3.5rem);
-      font-weight: 300;
-      margin-bottom: 1rem;
-      line-height: 1.15;
-    }
-
-    .contact-headline em { font-style: italic; color: var(--gold-light); }
-
-    .contact-sub {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      margin-bottom: 2.5rem;
-    }
-
-    .contact-links {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    /* ─── FOOTER ─── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem 4rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .footer-copy {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.1em;
-      color: var(--text-dim);
-    }
-
-    .footer-note {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.08em;
-      color: var(--text-dim);
-    }
-
-    /* ─── ANIMATIONS ─── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: none;
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 900px) {
-      nav { padding: 1.25rem 2rem; }
-      .nav-links { gap: 1.5rem; }
-      #hero { grid-template-columns: 1fr; padding: 7rem 2rem 3rem; }
-      .hero-stats { padding-left: 0; margin-top: 3rem; }
-      #about { grid-template-columns: 1fr; gap: 2rem; padding: 4rem 2rem; }
-      .about-sidebar { padding-top: 0; }
-      section, #experience, #projects, #skills, #contact { padding: 4rem 2rem; }
-      .projects-grid { grid-template-columns: 1fr; }
-      .project-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
-      .skills-grid { grid-template-columns: 1fr 1fr; }
-      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Khushi Advani</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one calm column of bands. The hero pairs the name with a 5x5 risk matrix (likelihood x impact), the one bold move; everything else stays quiet. */
+:root {
+  --bg: #F5F1FC;
+  --surface: #FFFFFF;
+  --soft: #E6DCFA;
+  --mid: #B79CED;
+  --accent: #6D4BC9;
+  --ink: #2B2144;
+  --muted: #6B6286;
+  --line: #D9CDF3;
+  --f-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17122A; --surface: #211A3A; --soft: #2E2450; --mid: #8D6FDB; --accent: #C2A8F5;
+    --ink: #EFE9FB; --muted: #A99FC4; --line: #372D5C; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17122A; --surface: #211A3A; --soft: #2E2450; --mid: #8D6FDB; --accent: #C2A8F5;
+  --ink: #EFE9FB; --muted: #A99FC4; --line: #372D5C; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 1040px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.05; margin: 0; letter-spacing: -0.02em; }
+.label { font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+
+/* nav */
+nav { display: flex; flex-wrap: wrap; gap: 8px 22px; justify-content: space-between; align-items: center; padding-block: 22px; }
+nav .mark { font-family: var(--f-display); font-weight: 800; font-size: 20px; text-decoration: none; }
+nav .links { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 14px; }
+nav .links a { text-decoration: none; color: var(--muted); }
+nav .links a:hover { color: var(--accent); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 40px; align-items: center; padding-block: 36px 64px; }
+.hero h1 { font-size: clamp(46px, 8vw, 92px); font-weight: 800; }
+.hero h1 span { color: var(--accent); }
+.role { font-family: var(--f-mono); font-size: 15px; margin: 22px 0 0; min-height: 1.6em; color: var(--ink); }
+.role b { color: var(--accent); font-weight: 500; }
+.role .caret { display: inline-block; width: 8px; height: 1.1em; background: var(--accent); vertical-align: text-bottom; margin-left: 2px; animation: blink 1s steps(2) infinite; }
+.pitch { max-width: 52ch; color: var(--muted); font-size: 18px; margin: 18px 0 28px; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn { display: inline-block; padding: 13px 22px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; border: 2px solid var(--accent); }
+.btn.primary { background: var(--accent); color: var(--bg); }
+.btn.primary:hover { background: var(--ink); border-color: var(--ink); }
+.btn.ghost { color: var(--accent); }
+.btn.ghost:hover { background: var(--soft); }
+
+/* risk matrix */
+.matrix { min-width: 0; }
+.matrix .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; aspect-ratio: 1; max-width: 100%; }
+.cell { border-radius: 6px; background: color-mix(in srgb, var(--mid) calc(var(--w) * 1%), var(--bg)); position: relative; transition: transform .2s; }
+.cell:hover { transform: scale(1.06); }
+.cell.me { background: var(--accent); display: grid; place-items: center; }
+.cell.me::after { content: ""; width: 34%; height: 34%; border-radius: 50%; background: var(--bg); }
+.matrix .axis { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: 10px; }
+.matrix .cap { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+.matrix .cap b { color: var(--ink); font-weight: 600; }
+
+/* sections */
+section { padding-block: 56px; border-top: 1px solid var(--line); }
+section h2 { font-size: clamp(30px, 5vw, 46px); font-weight: 700; margin: 8px 0 28px; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; }
+
+/* about */
+pre.code { margin: 0; padding: 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; font-family: var(--f-mono); font-size: 13px; line-height: 1.75; overflow-x: auto; min-width: 0; }
+pre.code .k { color: var(--accent); }
+pre.code .s { color: var(--muted); }
+.facts { display: grid; gap: 18px; align-content: start; min-width: 0; }
+.fact { display: grid; gap: 2px; }
+.fact .big { font-family: var(--f-display); font-weight: 800; font-size: 34px; color: var(--accent); line-height: 1; letter-spacing: -0.02em; }
+.fact p { margin: 0; color: var(--muted); font-size: 14px; }
+
+/* experience */
+.jobs { display: grid; gap: 0; }
+.job { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 8px 32px; padding-block: 26px; border-bottom: 1px solid var(--line); }
+.job:first-child { padding-top: 0; }
+.job .where { font-family: var(--f-display); font-weight: 700; font-size: 22px; line-height: 1.15; }
+.job .when { font-family: var(--f-mono); font-size: 12px; color: var(--muted); letter-spacing: .04em; margin-top: 6px; }
+.job h3 { font-size: 18px; font-weight: 600; font-family: var(--f-body); letter-spacing: 0; margin-bottom: 8px; }
+.job ul { margin: 0; padding-left: 18px; color: var(--muted); }
+.job li { margin-bottom: 6px; }
+.job li b { color: var(--ink); font-weight: 600; }
+
+/* projects */
+.projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.card:hover { border-color: var(--mid); }
+.card .stat { font-family: var(--f-display); font-weight: 800; font-size: 40px; letter-spacing: -0.03em; line-height: 1; color: var(--accent); }
+.card .stat small { font-family: var(--f-mono); font-weight: 400; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: block; margin-top: 6px; }
+.card h3 { font-size: 22px; }
+.card p { margin: 0; color: var(--muted); font-size: 15px; flex: 1; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-family: var(--f-mono); font-size: 11px; padding: 4px 10px; border-radius: 999px; background: var(--soft); color: var(--ink); }
+
+/* risk register */
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 15px; }
+th { text-align: left; font-family: var(--f-mono); font-weight: 500; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 14px 18px; border-bottom: 1px solid var(--line); }
+td { padding: 14px 18px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+td.id { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.lk { font-family: var(--f-mono); font-size: 12px; padding: 3px 10px; border-radius: 999px; white-space: nowrap; background: color-mix(in srgb, var(--mid) var(--w), var(--surface)); color: var(--ink); }
+.regnote { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+
+/* skills */
+.skills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.skills h3 { font-family: var(--f-mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 12px; }
+
+/* footer */
+footer { border-top: 1px solid var(--line); padding-block: 56px 48px; display: grid; gap: 22px; justify-items: start; }
+footer h2 { font-size: clamp(34px, 6vw, 60px); font-weight: 800; margin: 0; }
+footer .small { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.hero > div { animation: rise .7s ease both; }
+.hero .matrix { animation-delay: .15s; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
+
+@media (max-width: 820px) {
+  .hero { grid-template-columns: minmax(0, 1fr); padding-block: 20px 48px; }
+  .matrix { max-width: 360px; }
+  .two, .projects, .skills { grid-template-columns: minmax(0, 1fr); }
+  .job { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
 </head>
+
 <body>
-
-  <div id="progress"></div>
-
-  <!-- NAV -->
+<div class="wrap">
   <nav>
-    <div class="nav-logo">Khushi Advani</div>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
+    <a class="mark" href="#top">KA</a>
+    <div class="links">
+      <a href="#about">About</a><a href="#work">Work</a><a href="#projects">Projects</a><a href="#register">Risk register</a><a href="#skills">Skills</a>
+    </div>
   </nav>
 
-  <!-- HERO -->
-  <section id="hero">
-    <div class="hero-text">
-      <div class="hero-eyebrow">Data Science · Analytics · Consulting</div>
-      <h1 class="hero-name">Khushi<br/><em>Advani</em></h1>
-      <p class="hero-tagline">
-        I ask a lot of questions. Then I build the tools to answer them.
-        MS Data Science at Columbia, 4 years in the field, still learning something new every day.
-      </p>
-      <div class="hero-ctas">
-        <a href="#contact" class="btn-primary">Get in touch</a>
-        <a href="#projects" class="btn-ghost">View my work</a>
+  <header class="hero" id="top">
+    <div>
+      <span class="label">Columbia MS Data Science, Dec 2026</span>
+      <h1 style="margin-top:14px">Khushi <span>Advani</span></h1>
+      <p class="role">I work on <b id="role">risk analytics</b><span class="caret"></span></p>
+      <p class="pitch">I turn messy risk data into decisions people can trust. Three years of cyber risk consulting at Deloitte taught me to find what could go wrong. Data science lets me measure how likely it is.</p>
+      <div class="cta">
+        <a class="btn primary" href="#projects">See my projects</a>
+        <a class="btn ghost" href="#work">Where I have worked</a>
       </div>
     </div>
-    <div class="hero-stats">
-      <div class="stat-card">
-        <div class="stat-num">3.83</div>
-        <div class="stat-label">Columbia GPA</div>
+    <div class="matrix" aria-label="Risk matrix with Khushi marked at low likelihood and high impact">
+      <div class="grid" id="grid"></div>
+      <div class="axis"><span>Likelihood &rarr;</span><span>Impact &uarr;</span></div>
+      <p class="cap"><b>Where I plot myself:</b> low likelihood of missing a deadline, high impact once the model ships.</p>
+    </div>
+  </header>
+
+  <section id="about">
+    <span class="label">About</span>
+    <h2>From finding risk to pricing it</h2>
+    <div class="two">
+      <pre class="code"><span class="k">const</span> khushi = {
+  <span class="k">base</span>: <span class="s">"New York, with roots in Mumbai"</span>,
+  <span class="k">education</span>: [
+    <span class="s">"Columbia | MS Data Science | 3.83"</span>,
+    <span class="s">"Purdue | BS Computer Science | 3.75"</span>
+  ],
+  <span class="k">teaching</span>: [
+    <span class="s">"Banking &amp; Insurance (Fall 2026)"</span>,
+    <span class="s">"Climate Risk Assessment (Spring 2026)"</span>
+  ],
+  <span class="k">community</span>: <span class="s">"Social Chair, DSI Student Council"</span>,
+  <span class="k">lookingFor</span>: <span class="s">"full-time analytics, AI,
+                consulting and FDE roles"</span>,
+  <span class="k">offDuty</span>: [<span class="s">"baking"</span>, <span class="s">"event planning"</span>, <span class="s">"Bridgerton"</span>]
+};</pre>
+      <div class="facts">
+        <div class="fact"><span class="big">~4 yrs</span><p>of professional experience across Deloitte and Hapsun Medical Solutions.</p></div>
+        <div class="fact"><span class="big">400</span><p>legacy applications scanned up front on a cloud migration I managed for the security team.</p></div>
+        <div class="fact"><span class="big">98%</span><p>reduction in application technical debt ahead of that migration, through 400+ vulnerability scans.</p></div>
       </div>
-      <div class="stat-card">
-        <div class="stat-num">4+</div>
-        <div class="stat-label">Years Experience</div>
+    </div>
+  </section>
+
+  <section id="work">
+    <span class="label">Experience</span>
+    <h2>Where I have worked</h2>
+    <div class="jobs">
+      <div class="job">
+        <div><div class="where">Deloitte &amp; Touche</div><div class="when">AUG 2021 TO JUN 2024</div></div>
+        <div>
+          <h3>Cyber Risk Analyst, then Consultant</h3>
+          <ul>
+            <li>Project manager for the security team on a <b>cloud migration</b>. Scanned all <b>400 legacy on-prem applications</b> up front, flagged technical debt to each engineering team ahead of their phase, and cut it by <b>98%</b>.</li>
+            <li>Configured ingestion pipelines from 8 enterprise sources into a data discovery platform for a large hospital system, scanning <b>6M+ objects</b>.</li>
+            <li>Spearheaded a global <b>20+ person Quantum Risk engagement</b>, owning trackers, budgets and timelines, and led its client networking event for 40+ attendees.</li>
+            <li>Led several <b>train-the-trainer sessions</b>, including tool demos. Awarded the <b>Applause Award twice</b>.</li>
+          </ul>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-num">6M+</div>
-        <div class="stat-label">Data Objects Handled</div>
+      <div class="job">
+        <div><div class="where">Spinnaker Analytics</div><div class="when">JUN TO AUG 2026 &middot; BOSTON</div></div>
+        <div>
+          <h3>Data Analyst Intern</h3>
+          <ul>
+            <li>Architected a fully local agentic financial analyst over SEC 10-K filings, pairing a Chroma RAG layer with a separate Python calculation tool so the model never generated its own figures.</li>
+            <li>Forecast insurance commission trends with Holt-Winters, SARIMAX, Prophet and LSTM using walk-forward validation. The best model reached <b>12% MAPE</b>, informing client revenue planning.</li>
+          </ul>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-num">94.8%</div>
-        <div class="stat-label">Model AUC</div>
+      <div class="job">
+        <div><div class="where">Hapsun Medical Solutions</div><div class="when">JUL 2024 TO JUL 2025 &middot; MUMBAI</div></div>
+        <div>
+          <h3>Analytics Consultant</h3>
+          <ul>
+            <li>Built <b>Tableau</b> dashboards tracking 8 operational and revenue KPIs across 3 medical centers, saving 40+ hours of manual reporting per quarter.</li>
+            <li>Compared options across 100+ equipment categories with quotes from 50+ suppliers to support procurement for an incoming <b>1,000-bed hospital</b>.</li>
+            <li>Managed a 3-person team building a <b>MongoDB</b>-backed clinic platform, designing the data models and indexed queries myself.</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ABOUT -->
-  <div id="about">
-    <div class="about-content">
-      <div class="section-header">
-        <span class="section-num">01</span>
-        <h2 class="section-title">About</h2>
-        <div class="section-line"></div>
-      </div>
-      <p class="about-body reveal">
-        I've always been drawn to the <strong>why behind the numbers</strong>. What does a 32% spike in heat hospitalizations 
-        actually mean for a family in rural Texas? Why does a compliance dashboard surface a bottleneck nobody noticed for months? 
-        That kind of curiosity is what pulled me from computer science into data science, and from data science into 
-        <strong>climate risk, healthcare, and AI-powered analytics</strong>.
-      </p>
-      <p class="about-body reveal" style="margin-top:1rem;">
-        I've spent 4 years building things — ETL pipelines at Deloitte, KPI dashboards at Hapsun, LLM agents, 
-        predictive models, interactive dashboards — and I still get excited when something new clicks. 
-        Currently at Columbia deepening my ML foundations and TA-ing climate risk, I'm looking for a summer 2026 role 
-        where I can keep asking hard questions and building the tools to answer them.
-      </p>
-      <div class="about-details reveal">
-        <div class="detail-row">
-          <span class="detail-key">Location</span>
-          <span class="detail-val">New York City, NY</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-key">Status</span>
-          <span class="detail-val">Open to Summer 2026 Internships</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-key">Focus</span>
-          <span class="detail-val">Analytics, Data Science, Consulting</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-key">Domains</span>
-          <span class="detail-val">Climate Risk · Healthcare · Finance</span>
-        </div>
-      </div>
-    </div>
-    <div class="about-sidebar reveal">
-      <div class="edu-card">
-        <div class="edu-school">Columbia University</div>
-        <div class="edu-degree">MS, Data Science · Dec 2026</div>
-        <div class="edu-gpa">GPA 3.83 · Climate School TA</div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-school">Purdue University</div>
-        <div class="edu-degree">BS, Computer Science · 2021</div>
-        <div class="edu-gpa">GPA 3.75 · Dean's List</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- EXPERIENCE -->
-  <section id="experience">
-    <div class="section-header reveal">
-      <span class="section-num">02</span>
-      <h2 class="section-title">Experience</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="timeline">
-
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-period">Jan 2024 — Present</div>
-        <div class="timeline-role">Teaching Assistant — Climate Risk Assessment</div>
-        <div class="timeline-company">Columbia University Climate School · CLMT 5037</div>
-        <ul class="timeline-bullets">
-          <li>Designed tabletop risk assessment exercises simulating NYC nor'easters and extreme heat scenarios</li>
-          <li>Built Jupyter notebooks using Zarr, Xarray, and Dask for CMIP6 climate data analysis</li>
-          <li>Developing final project rubrics and grading frameworks for a graduate-level climate risk course</li>
-        </ul>
-      </div>
-
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-period">2024 — 2025</div>
-        <div class="timeline-role">Analytics Consultant</div>
-        <div class="timeline-company">Hapsun Medical Solutions</div>
-        <ul class="timeline-bullets">
-          <li>Led a small analytics team; delivered hospital build analyses and automated Excel KPI dashboards for medical centers</li>
-          <li>Built procurement analytics workflows and led data-driven reporting for clinical operations</li>
-        </ul>
-      </div>
-
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-period">2022 — 2024</div>
-        <div class="timeline-role">Consultant, Cyber Risk</div>
-        <div class="timeline-company">Deloitte</div>
-        <ul class="timeline-bullets">
-          <li>Architected an ETL pipeline integrating 8 enterprise data sources and 6M+ data objects across a 20-person global team</li>
-          <li>Led BigID data governance implementation; built a client-facing privacy risk portal</li>
-          <li>Conducted vulnerability scanning (Checkmarx, Prisma Cloud) and coordinated quantum risk assessments</li>
-        </ul>
-      </div>
-
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-period">2021 — 2022</div>
-        <div class="timeline-role">Analyst, Cyber Risk</div>
-        <div class="timeline-company">Deloitte</div>
-        <ul class="timeline-bullets">
-          <li>Built Agile compliance dashboards and privacy risk scoring frameworks for enterprise clients</li>
-          <li>Performed vulnerability analysis and cloud migration compliance assessments</li>
-        </ul>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- PROJECTS -->
   <section id="projects">
-    <div class="section-header reveal">
-      <span class="section-num">03</span>
-      <h2 class="section-title">Projects</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="projects-grid">
-
-      <div class="project-card featured reveal">
-        <div>
-          <div class="project-tag">Flagship · Credit Risk</div>
-          <div class="project-name">PPI Credit Default Model</div>
-          <div class="project-desc">
-            Built an XGBoost-powered credit default prediction model on 460K American Express customers. 
-            Achieved 94.8% AUC with risk-tiered premium pricing ($201–$5,942 range) and a projected 650% ROI. 
-            End-to-end pipeline from feature engineering to business recommendation.
-          </div>
-          <div class="project-chips">
-            <span class="chip">XGBoost</span>
-            <span class="chip">Python</span>
-            <span class="chip">Feature Engineering</span>
-            <span class="chip">Risk Modeling</span>
-            <span class="chip">AmEx Data</span>
-          </div>
-        </div>
-        <div>
-          <div class="featured-metric">
-            <div class="metric-num">94.8%</div>
-            <div class="metric-label">AUC Score</div>
-          </div>
-          <div class="featured-metric" style="margin-top:1rem;">
-            <div class="metric-num">650%</div>
-            <div class="metric-label">Projected ROI</div>
-          </div>
-          <div class="featured-metric" style="margin-top:1rem;">
-            <div class="metric-num">460K</div>
-            <div class="metric-label">Customers Modeled</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-card reveal">
-        <div class="project-tag">Climate · Health</div>
-        <div class="project-name">Heat's Toll on Health</div>
-        <div class="project-desc">
-          Interactive Streamlit dashboard with a polynomial spline ML model estimating county-level heat 
-          vulnerability using socioeconomic fixed effects. Identified a 32% rise in heat hospitalizations vs. 
-          16% heat event growth across 31 states. Embedded a Groq-powered AI agent for conversational querying.
-        </div>
-        <div class="project-chips">
-          <span class="chip">Python</span>
-          <span class="chip">Streamlit</span>
-          <span class="chip">Groq / Llama 3</span>
-          <span class="chip">R · ggplot2</span>
-        </div>
-      </div>
-
-      <div class="project-card reveal">
-        <div class="project-tag">AI · Agentic Systems</div>
-        <div class="project-name">AI Retail Data Agent</div>
-        <div class="project-desc">
-          Built an autonomous LLM agent that dynamically generates and executes SQL against 1M+ rows of retail 
-          transaction data from natural language queries — returning structured analytical outputs through a chat interface.
-        </div>
-        <div class="project-chips">
-          <span class="chip">n8n</span>
-          <span class="chip">Groq / Llama 3</span>
-          <span class="chip">PostgreSQL</span>
-          <span class="chip">Docker</span>
-        </div>
-      </div>
-
+    <span class="label">Projects</span>
+    <h2>Things I have built</h2>
+    <div class="projects">
+      <article class="card">
+        <div class="stat">0.957<small>test AUC</small></div>
+        <h3>Payment Protection Insurance Credit Default Model</h3>
+        <p>Engineered 2,000+ behavioral time-series features from 13 months of statements for 50K AmEx customers and benchmarked Logistic Regression, Random Forest and LightGBM. Default probabilities become risk-based premiums that hold a 58.9% loss ratio against a 60% target.</p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">LightGBM</span><span class="tag">scikit-learn</span><span class="tag">SHAP</span></div>
+      </article>
+      <article class="card">
+        <div class="stat">32%<small>rise in hospitalizations</small></div>
+        <h3>Heat's Toll on Health</h3>
+        <p>Twenty-three years of CDC environmental and hospitalization data across 31 states, modeled with distributed lag non-linear models. Ships with a Streamlit dashboard and a Groq-powered AI agent so non-technical stakeholders can query the findings.</p>
+        <div class="tags"><span class="tag">R</span><span class="tag">Python</span><span class="tag">Streamlit</span><span class="tag">Groq</span></div>
+      </article>
+      <article class="card">
+        <div class="stat">n8n<small>workflow agent</small></div>
+        <h3>AI Retail Agent</h3>
+        <p>An LLM agent that writes and runs SQL over the UCI Online Retail transaction data so non-technical users can ask questions in plain language. Runs on Groq with PostgreSQL in Docker.</p>
+        <div class="tags"><span class="tag">n8n</span><span class="tag">Groq</span><span class="tag">PostgreSQL</span><span class="tag">Docker</span></div>
+      </article>
+      <article class="card">
+        <div class="stat">394K<small>NFIP flood claims</small></div>
+        <h3>Where Texas Floods</h3>
+        <p>Geospatial analysis of Texas flood insurance claims from 1978 to 2026, set against Louisiana and Florida. Harvey alone produced 23% of claims and 52% of dollars paid, and the coastal share of claims moves a lot with how you draw the coast, which the notebook tests.</p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">Plotly</span><span class="tag">OpenFEMA</span><span class="tag">Geospatial</span></div>
+      </article>
+      <article class="card">
+        <div class="stat">Chrome<small>extension</small></div>
+        <h3>Sponsor Signal</h3>
+        <p>A side panel for international students reading job postings. It shows what the posting says about visa sponsorship, with the exact supporting quote, next to the employer's H-1B certification record from Department of Labor data. Built with a teammate for Product Management with AI. It gives no legal advice and does not predict sponsorship.</p>
+        <div class="tags"><span class="tag">JavaScript</span><span class="tag">Claude API</span><span class="tag">DOL LCA data</span></div>
+      </article>
+      <article class="card">
+        <div class="stat">5<small>business questions</small></div>
+        <h3>NFIP Claims Lakehouse</h3>
+        <p>A planned end-to-end pipeline on FEMA flood insurance data, from OpenFEMA ingestion through Delta tables to a SQL warehouse and dashboard. It aims to answer where losses concentrate, how payouts and closing times vary, and which segments look underpriced. Still in the planning stage.</p>
+        <div class="tags"><span class="tag">PySpark</span><span class="tag">Delta Lake</span><span class="tag">Snowflake</span><span class="tag">SQL</span></div>
+      </article>
     </div>
   </section>
 
-  <!-- SKILLS -->
+  <section id="register">
+    <span class="label">Risk register</span>
+    <h2>My own, with mitigations</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>ID</th><th>Risk</th><th>Likelihood</th><th>Mitigation</th></tr></thead>
+        <tbody>
+          <tr><td class="id">R-01</td><td>Messy data</td><td><span class="lk" style="--w:90%">Certain</span></td><td>Clean it, document it, never trust it blindly.</td></tr>
+          <tr><td class="id">R-02</td><td>Black-box models</td><td><span class="lk" style="--w:65%">High</span></td><td>Explain every prediction before it ships.</td></tr>
+          <tr><td class="id">R-03</td><td>Scope creep</td><td><span class="lk" style="--w:40%">Medium</span></td><td>Write the problem statement first.</td></tr>
+          <tr><td class="id">R-04</td><td>Too many tabs open</td><td><span class="lk" style="--w:90%">Certain</span></td><td>Tea, and one task at a time.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="regnote">Three years of keeping real registers at Deloitte left me with the habit.</p>
+  </section>
+
   <section id="skills">
-    <div class="section-header reveal">
-      <span class="section-num">04</span>
-      <h2 class="section-title">Skills</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="skills-grid">
-      <div class="skill-group reveal">
-        <div class="skill-group-title">Languages & Tools</div>
-        <ul class="skill-list">
-          <li>Python (Pandas, NumPy, Scikit-learn)</li>
-          <li>R (tidyverse)</li>
-          <li>SQL · PostgreSQL</li>
-          <li>Tableau · Power BI · Excel</li>
-        </ul>
-      </div>
-      <div class="skill-group reveal">
-        <div class="skill-group-title">ML & Analytics</div>
-        <ul class="skill-list">
-          <li>XGBoost · scikit-learn</li>
-          <li>Time Series (ARIMA/SARIMA)</li>
-          <li>Regression · Hypothesis Testing</li>
-          <li>A/B Testing · Data Modeling</li>
-        </ul>
-      </div>
-      <div class="skill-group reveal">
-        <div class="skill-group-title">AI & Automation</div>
-        <ul class="skill-list">
-          <li>n8n · Agentic Workflows</li>
-          <li>Groq / Llama 3 · LLM Tool-Calling</li>
-          <li>Prompt Design</li>
-          <li>Streamlit · Docker</li>
-        </ul>
-      </div>
-      <div class="skill-group reveal">
-        <div class="skill-group-title">Domains</div>
-        <ul class="skill-list">
-          <li>Climate Risk</li>
-          <li>Healthcare Analytics</li>
-          <li>Cyber Risk · GRC</li>
-          <li>Financial Modeling</li>
-        </ul>
-      </div>
+    <span class="label">Skills</span>
+    <h2>What I work with</h2>
+    <div class="skills">
+      <div><h3>Languages</h3><div class="tags"><span class="tag">Python</span><span class="tag">R</span><span class="tag">SQL</span></div></div>
+      <div><h3>ML and statistics</h3><div class="tags"><span class="tag">Forecasting</span><span class="tag">Time series</span><span class="tag">LightGBM</span><span class="tag">SHAP</span><span class="tag">scikit-learn</span><span class="tag">Feature engineering</span><span class="tag">Walk-forward validation</span></div></div>
+      <div><h3>Tools, AI and BI</h3><div class="tags"><span class="tag">MongoDB</span><span class="tag">Docker</span><span class="tag">AWS</span><span class="tag">Azure</span><span class="tag">RAG pipelines</span><span class="tag">Agentic workflows</span><span class="tag">Groq</span><span class="tag">n8n</span><span class="tag">Tableau</span><span class="tag">Power BI</span><span class="tag">Streamlit</span></div></div>
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="contact-inner">
-      <div class="section-header reveal" style="justify-content:center;">
-        <span class="section-num">05</span>
-        <h2 class="section-title">Contact</h2>
-      </div>
-      <h3 class="contact-headline reveal">Let's build something<br/><em>meaningful</em> together.</h3>
-      <p class="contact-sub reveal">
-        Open to Summer 2026 internship opportunities in analytics, data science, and consulting. 
-        Always happy to connect.
-      </p>
-      <div class="contact-links reveal">
-        <a href="mailto:ka3090@columbia.edu" class="btn-primary">Email Me</a>
-        <a href="https://linkedin.com/in/khushi-advani" target="_blank" class="btn-ghost">LinkedIn</a>
-        <a href="https://github.com/ka1899" target="_blank" class="btn-ghost">GitHub</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
   <footer>
-    <div class="footer-copy">© 2026 Khushi Advani</div>
-    <div class="footer-note">Columbia University · MS Data Science</div>
+    <span class="label">Say hello</span>
+    <h2>Let's talk risk, models and tea.</h2>
+    <div class="cta">
+      <a class="btn primary" href="https://www.linkedin.com/in/khushi-advani">LinkedIn</a>
+      <a class="btn ghost" href="https://ka1899.github.io/">Previous portfolio</a>
+    </div>
+    <span class="small">Khushi Advani &middot; New York &middot; 2026</span>
   </footer>
+</div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    // Scroll progress bar
-    window.addEventListener('scroll', () => {
-      const scrolled = window.scrollY;
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      document.getElementById('progress').style.width = `${(scrolled / total) * 100}%`;
-    });
+<script>
+(function () {
+  // Risk matrix: rows are impact (top = high), columns are likelihood (right = high).
+  var grid = document.getElementById("grid");
+  for (var r = 0; r < 5; r++) {
+    for (var c = 0; c < 5; c++) {
+      var impact = 5 - r, like = c + 1;
+      var d = document.createElement("div");
+      d.className = "cell";
+      d.style.setProperty("--w", String(Math.round((impact * like) / 25 * 85 + 8)));
+      if (impact === 5 && like === 2) d.className += " me";
+      grid.appendChild(d);
+    }
+  }
+  // Rotating roles
+  var roles = ["risk analytics", "insurance data", "forecasting models", "explainable ML", "data consulting"];
+  var el = document.getElementById("role");
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) return;
+  var i = 0, n = 0, dir = 1;
+  function tick() {
+    var word = roles[i];
+    n += dir;
+    el.textContent = word.slice(0, n);
+    var wait = 70;
+    if (dir === 1 && n === word.length) { dir = -1; wait = 1400; }
+    else if (dir === -1 && n === 0) { dir = 1; i = (i + 1) % roles.length; wait = 300; }
+    setTimeout(tick, wait);
+  }
+  tick();
+})();
+</script>
 
-    // Reveal on scroll
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, i) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => entry.target.classList.add('visible'), i * 80);
-          observer.unobserve(entry.target);
-      
+</body>
+</html>
