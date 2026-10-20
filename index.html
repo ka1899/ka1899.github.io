@@ -52,6 +52,8 @@ nav .mark { font-family: var(--f-display); font-weight: 800; font-size: 20px; te
 nav .links { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 14px; }
 nav .links a { text-decoration: none; color: var(--muted); }
 nav .links a:hover { color: var(--accent); }
+nav .links a.navres { color: var(--bg); background: var(--accent); padding: 4px 14px; border-radius: 999px; font-weight: 600; }
+nav .links a.navres:hover { color: var(--bg); background: var(--ink); }
 
 /* hero */
 .hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 40px; align-items: center; padding-block: 36px 64px; }
@@ -156,7 +158,7 @@ footer .small { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
   <nav>
     <a class="mark" href="#top">KA</a>
     <div class="links">
-      <a href="#about">About</a><a href="#work">Work</a><a href="#projects">Projects</a><a href="#register">Risk register</a><a href="#skills">Skills</a>
+      <a href="#about">About</a><a href="#work">Work</a><a href="#projects">Projects</a><a href="#register">Risk register</a><a href="#skills">Skills</a><a class="navres" href="resume.pdf" target="_blank" rel="noopener">Resume</a>
     </div>
   </nav>
 
@@ -167,7 +169,8 @@ footer .small { font-family: var(--f-mono); font-size: 12px; color: var(--muted)
       <p class="role">I work on <b id="role">risk analytics</b><span class="caret"></span></p>
       <p class="pitch">I turn messy risk data into decisions people can trust. Three years of cyber risk consulting at Deloitte taught me to find what could go wrong. Data science lets me measure how likely it is.</p>
       <div class="cta">
-        <a class="btn primary" href="#projects">See my projects</a>
+        <a class="btn primary" href="resume.pdf" target="_blank" rel="noopener">Resume (PDF)</a>
+        <a class="btn ghost" href="#projects">See my projects</a>
         <a class="btn ghost" href="#work">Where I have worked</a>
       </div>
     </div>
